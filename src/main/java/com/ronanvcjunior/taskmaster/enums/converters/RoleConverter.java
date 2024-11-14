@@ -28,6 +28,6 @@ public class RoleConverter implements AttributeConverter<Authority, String> {
                 .filter(authority -> authority.getValue().equalsIgnoreCase(code))
                 .findFirst()
                 .orElseThrow(() ->
-                        new RuntimeException("Invalid authority code: " + code + " found in the database"));
+                        new RuntimeException("Código de autoridade inválido: " + code + " encontrado no banco de dados"));
     }
 }
