@@ -7,6 +7,7 @@ import lombok.*;
 import java.time.ZonedDateTime;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_DEFAULT;
+import static jakarta.persistence.FetchType.EAGER;
 
 @Getter
 @Setter
@@ -33,5 +34,16 @@ public class UserEntity extends Auditable{
     private boolean accountUnexpired;
     private boolean accountUnlocked;
     private boolean enabled;
-    private String role;
+
+    @ManyToOne(fetch = EAGER)
+    @JoinTable(
+            name = "user_roles",
+            joinColumns = @JoinColumn(
+                    name = "user_id", referencedColumnName = "id"
+            ),
+            inverseJoinColumns = @JoinColumn(
+                    name = "role_id", referencedColumnName = "id"
+            )
+    )
+    private RoleEntity role;
 }
