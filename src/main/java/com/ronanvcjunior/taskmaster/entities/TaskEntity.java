@@ -31,14 +31,14 @@ public class TaskEntity extends  Auditable {
     @Column(name = "payment_deadline")
     private ZonedDateTime paymentDeadline;
 
-    @Column(unique = true, nullable = false)
+    @Column(name = "task_order", unique = true, nullable = false)
     private Integer order;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
             name = "user_id",
             referencedColumnName = "id",
-            foreignKey = @ForeignKey(name = "fk_documents_owner", foreignKeyDefinition = "foreign key /* FK */ (user_id) references UserEntity", value = ConstraintMode.CONSTRAINT)
+            foreignKey = @ForeignKey(name = "fk_tasks_owner", foreignKeyDefinition = "foreign key /* FK */ (user_id) references users", value = ConstraintMode.CONSTRAINT)
     )
     private UserEntity owner;
 
