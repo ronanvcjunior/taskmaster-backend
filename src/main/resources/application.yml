@@ -55,3 +55,7 @@ spring:
     protocol: smtp
     tls: true
     debug: true
+
+jwt:
+  expiration: ${JWT_EXPIRATION}
+  secret: ${JWT_SECRET}
