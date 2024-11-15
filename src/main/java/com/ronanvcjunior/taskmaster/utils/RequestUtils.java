@@ -1,7 +1,5 @@
 package com.ronanvcjunior.taskmaster.utils;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import com.ronanvcjunior.taskmaster.dtos.Response;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -9,10 +7,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 
 import java.util.Map;
-import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 
-import static java.time.LocalDateTime.now;
+import static java.time.ZonedDateTime.now;
 import static java.util.Collections.emptyMap;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.exception.ExceptionUtils.getRootCauseMessage;

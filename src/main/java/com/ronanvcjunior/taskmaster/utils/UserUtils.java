@@ -17,7 +17,7 @@ public class UserUtils {
                 .lastLogin(now())
                 .accountUnexpired(true)
                 .accountUnlocked(true)
-                .enabled(true)
+                .enabled(false)
                 .loginAttempts(0)
                 .role(role)
                 .build();
