@@ -15,8 +15,9 @@ public class ConfirmationServiceImpl implements ConfirmationService {
     private final ConfirmationRepository confirmationRepository;
 
     @Override
-    public void createConfirmation(UserEntity userEntity) {
+    public String createConfirmation(UserEntity userEntity) {
         ConfirmationEntity confirmationEntity = new ConfirmationEntity(userEntity);
         this.confirmationRepository.save(confirmationEntity);
+        return confirmationEntity.getKey();
     }
 }
