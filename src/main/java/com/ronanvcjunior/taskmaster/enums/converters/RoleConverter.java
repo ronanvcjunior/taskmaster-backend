@@ -1,6 +1,7 @@
 package com.ronanvcjunior.taskmaster.enums.converters;
 
 import com.ronanvcjunior.taskmaster.enums.Authority;
+import com.ronanvcjunior.taskmaster.exceptions.ApiException;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 
@@ -28,6 +29,6 @@ public class RoleConverter implements AttributeConverter<Authority, String> {
                 .filter(authority -> authority.getValue().equalsIgnoreCase(code))
                 .findFirst()
                 .orElseThrow(() ->
-                        new RuntimeException("Código de autoridade inválido: " + code + " encontrado no banco de dados"));
+                        new ApiException("Código de autoridade inválido: " + code + " encontrado no banco de dados"));
     }
 }

@@ -2,6 +2,7 @@ package com.ronanvcjunior.taskmaster.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.ronanvcjunior.taskmaster.domains.RequestContext;
+import com.ronanvcjunior.taskmaster.exceptions.ApiException;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -45,7 +46,7 @@ public abstract class Auditable {
     public void beforePersist() {
         Long userId = RequestContext.getUserId();
         if (userId == null) {
-            throw new RuntimeException("Não é possível persistir a entidade sem o ID do usuário no contexto da requisição para este thread");
+            throw new ApiException("Não é possível persistir a entidade sem o ID do usuário no contexto da requisição para este thread");
         }
 
         setCreatedAt(ZonedDateTime.now());
@@ -59,7 +60,7 @@ public abstract class Auditable {
     public void beforeUpdate() {
         Long userId = RequestContext.getUserId();
         if (userId == null) {
-            throw new RuntimeException("Não é possível atualizar a entidade sem o ID do usuário no contexto da requisição para este thread");
+            throw new ApiException("Não é possível atualizar a entidade sem o ID do usuário no contexto da requisição para este thread");
         }
 
         setUpdatedAt(ZonedDateTime.now());
