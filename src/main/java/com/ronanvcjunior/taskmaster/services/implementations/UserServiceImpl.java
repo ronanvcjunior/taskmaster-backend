@@ -113,6 +113,16 @@ public class UserServiceImpl implements UserService {
         return fromUserEntity(userEntity, userEntity.getRole(), credentialEntity);
     }
 
+    @Override
+    public User getUserByUserId(String userId) {
+        UserEntity userEntity = this.userRepository.findUserEntityByUserId(userId)
+                .orElseThrow(() -> new ApiException(USER_NOT_FOUND));
+
+        CredentialEntity credentialEntity = this.credentialService.getUserCredentialByUserId(userEntity.getUserId());
+
+        return fromUserEntity(userEntity, userEntity.getRole(), credentialEntity);
+    }
+
     private UserEntity createNewUser(String firstName, String lastName, String email) {
         RoleEntity role = this.roleService.getRoleName(USER.name());
         return createUserEntity(firstName, lastName, email, role);
