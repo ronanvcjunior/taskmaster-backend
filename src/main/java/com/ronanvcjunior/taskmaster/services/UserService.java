@@ -3,6 +3,8 @@ package com.ronanvcjunior.taskmaster.services;
 import com.ronanvcjunior.taskmaster.dtos.User;
 import com.ronanvcjunior.taskmaster.enums.LoginType;
 
+import java.util.List;
+
 public interface UserService {
     void createUser(String firstName, String lastName, String email, String password);
 
@@ -14,4 +16,5 @@ public interface UserService {
 
     User getUserByUserId(String userId);
 
+    List<User> getAllUserByUserId();
 }
