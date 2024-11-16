@@ -21,8 +21,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.ronanvcjunior.taskmaster.enums.Authority.*;
 import static com.ronanvcjunior.taskmaster.enums.EventType.REGISTRATION;
@@ -121,6 +123,20 @@ public class UserServiceImpl implements UserService {
         CredentialEntity credentialEntity = this.credentialService.getUserCredentialByUserId(userEntity.getUserId());
 
         return fromUserEntity(userEntity, userEntity.getRole(), credentialEntity);
+    }
+
+    @Override
+    public List<User> getAllUserByUserId() {
+        List<UserEntity> usersEntity = this.userRepository.findAllUserEntities()
+                .orElseThrow(() -> new ApiException(USER_NOT_FOUND));
+
+
+        return usersEntity.stream()
+                .map(userEntity -> {
+                    CredentialEntity credentialEntity = this.credentialService.getUserCredentialByUserId(userEntity.getUserId());
+                    return fromUserEntity(userEntity, userEntity.getRole(), credentialEntity);
+                })
+                .collect(Collectors.toList());
     }
 
     private UserEntity createNewUser(String firstName, String lastName, String email) {
