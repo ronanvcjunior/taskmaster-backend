@@ -6,9 +6,12 @@ import jakarta.validation.Valid;
 
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
+import java.util.List;
 
 public interface TaskService {
     void createTask(String name, BigDecimal cost, ZonedDateTime paymentDeadline);
 
     TaskResponse getTask(@Valid String taskId);
+
+    List<TaskResponse> getAllTasks();
 }

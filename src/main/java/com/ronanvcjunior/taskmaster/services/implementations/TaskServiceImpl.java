@@ -10,12 +10,14 @@ import com.ronanvcjunior.taskmaster.repositories.TaskRepository;
 import com.ronanvcjunior.taskmaster.repositories.UserRepository;
 import com.ronanvcjunior.taskmaster.services.TaskService;
 import com.ronanvcjunior.taskmaster.services.UserService;
+import com.ronanvcjunior.taskmaster.utils.TaskUtils;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
+import java.util.List;
 
 import static com.ronanvcjunior.taskmaster.utils.TaskUtils.createTaskEntity;
 import static com.ronanvcjunior.taskmaster.utils.TaskUtils.fromTaskEntity;
@@ -50,5 +52,19 @@ public class TaskServiceImpl implements TaskService {
                 .orElseThrow(() -> new ApiException("Task não encontrada"));
 
         return fromTaskEntity(task);
+    }
+
+    @Override
+    public List<TaskResponse> getAllTasks() {
+        Long userId = RequestContext.getUserId();
+
+        List<TaskEntity> tasksEntities = this.taskRepository.findTasksEntitiesByUserId(userId)
+                .orElseThrow(() -> new ApiException("Task não encontrada"));
+
+
+
+        return tasksEntities.stream()
+                .map(TaskUtils::fromTaskEntity)
+                .toList();
     }
 }

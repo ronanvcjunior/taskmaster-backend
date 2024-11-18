@@ -44,4 +44,12 @@ public class TaskController {
 
         return ResponseEntity.ok().body(getResponse(request, of("task", task), "Atividade do usuário recuperado", OK));
     }
+
+    @GetMapping("/all")
+    @PreAuthorize("hasAnyAuthority('task:read') or hasAnyRole('USER', 'ADMIN')")
+    public ResponseEntity<Response> getAllTasks(HttpServletRequest request) {
+        List<TaskResponse> tasks = this.taskService.getAllTasks();
+
+        return ResponseEntity.ok().body(getResponse(request, of("tasks", tasks), "Atividade do usuário recuperado", OK));
+    }
 }
