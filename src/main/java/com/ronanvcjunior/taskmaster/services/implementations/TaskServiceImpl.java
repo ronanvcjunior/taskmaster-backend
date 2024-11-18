@@ -1,6 +1,7 @@
 package com.ronanvcjunior.taskmaster.services.implementations;
 
 import com.ronanvcjunior.taskmaster.domains.RequestContext;
+import com.ronanvcjunior.taskmaster.domains.TaskSpecification;
 import com.ronanvcjunior.taskmaster.dtos.User;
 import com.ronanvcjunior.taskmaster.dtos.response.TaskResponse;
 import com.ronanvcjunior.taskmaster.entities.TaskEntity;
@@ -13,6 +14,11 @@ import com.ronanvcjunior.taskmaster.services.UserService;
 import com.ronanvcjunior.taskmaster.utils.TaskUtils;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -69,6 +75,29 @@ public class TaskServiceImpl implements TaskService {
                 .map(TaskUtils::fromTaskEntity)
                 .toList();
     }
+
+    @Override
+    public Page<TaskResponse> getTasks(int page, int size, String sortField, String sortOrder, String filters) {
+        Long userId = RequestContext.getUserId();
+
+        Sort sort = sortOrder != null && sortOrder.equalsIgnoreCase("DESC")
+                ? Sort.by(sortField).descending()
+                : Sort.by(sortField).ascending();
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        Specification<TaskEntity> spec = TaskSpecification.byFilters(filters, userId);
+
+        Page<TaskEntity> tasks = this.taskRepository.findAll(spec, pageable);
+
+        if (tasks.isEmpty()) {
+            return Page.empty(pageable);
+        }
+
+
+        return tasks.map(TaskUtils::fromTaskEntity);
+    }
+
 
     @Override
     public void moveTaskOrder(String taskId, Boolean moveUp) {

@@ -9,6 +9,7 @@ import com.ronanvcjunior.taskmaster.services.TaskService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -45,12 +46,32 @@ public class TaskController {
         return ResponseEntity.ok().body(getResponse(request, of("task", task), "Atividade do usuário recuperado", OK));
     }
 
+//    @GetMapping("/all")
+//    @PreAuthorize("hasAnyAuthority('task:read') or hasAnyRole('USER', 'ADMIN')")
+//    public ResponseEntity<Response> getAllTasks(HttpServletRequest request) {
+//        List<TaskResponse> tasks = this.taskService.getAllTasks();
+//
+//        return ResponseEntity.ok().body(getResponse(request, of("tasks", tasks), "Atividade do usuário recuperado", OK));
+//    }
+
     @GetMapping("/all")
     @PreAuthorize("hasAnyAuthority('task:read') or hasAnyRole('USER', 'ADMIN')")
-    public ResponseEntity<Response> getAllTasks(HttpServletRequest request) {
-        List<TaskResponse> tasks = this.taskService.getAllTasks();
+    public ResponseEntity<Response> getAllTasks(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false, defaultValue = "order") String sortField,
+            @RequestParam(required = false, defaultValue = "DESC") String sortOrder,
+            @RequestParam(required = false) String filters,
+            HttpServletRequest request) {
 
-        return ResponseEntity.ok().body(getResponse(request, of("tasks", tasks), "Atividade do usuário recuperado", OK));
+        Page<TaskResponse> tasks = this.taskService.getTasks(page, size, sortField, sortOrder, filters);
+
+        return ResponseEntity.ok().body(getResponse(
+                request,
+                of("tasks", tasks.getContent(), "total", tasks.getTotalElements()),
+                "Atividades recuperadas com sucesso",
+                OK
+        ));
     }
 
     @PutMapping("/update")
