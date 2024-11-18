@@ -21,4 +21,7 @@ public interface TaskRepository extends JpaRepository<TaskEntity, Long> {
 
     @Query(value =  SELECT_ALL_TASKS, nativeQuery = true)
     Optional<List<TaskEntity>> findTasksEntitiesByUserId(Long userId);
+
+    @Query(value =  SELECT_TASK_BY_ORDER, nativeQuery = true)
+    Optional<TaskEntity> findTaskEntityByOrderAndUserId(@Param("order") Integer order, @Param("userId") Long userId);
 }

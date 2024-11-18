@@ -23,7 +23,6 @@ import static com.ronanvcjunior.taskmaster.utils.TaskUtils.createTaskEntity;
 import static com.ronanvcjunior.taskmaster.utils.TaskUtils.fromTaskEntity;
 
 @Service
-@Transactional(rollbackOn = Exception.class)
 @RequiredArgsConstructor
 public class TaskServiceImpl implements TaskService {
     private final TaskRepository taskRepository;
@@ -31,6 +30,7 @@ public class TaskServiceImpl implements TaskService {
     private final UserRepository userRepository;
 
     @Override
+    @Transactional(rollbackOn = Exception.class)
     public void createTask(String name, BigDecimal cost, ZonedDateTime paymentDeadline) {
         Long userId = RequestContext.getUserId();
 
@@ -45,6 +45,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    @Transactional(rollbackOn = Exception.class)
     public TaskResponse getTask(String taskId) {
         Long userId = RequestContext.getUserId();
 
@@ -55,6 +56,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    @Transactional(rollbackOn = Exception.class)
     public List<TaskResponse> getAllTasks() {
         Long userId = RequestContext.getUserId();
 
@@ -66,5 +68,40 @@ public class TaskServiceImpl implements TaskService {
         return tasksEntities.stream()
                 .map(TaskUtils::fromTaskEntity)
                 .toList();
+    }
+
+    @Override
+    public void moveTaskOrder(String taskId, Boolean moveUp) {
+        Long userId = RequestContext.getUserId();
+
+        TaskEntity taskMoved = this.taskRepository.findTaskEntityByTaskIdAndUserId(taskId, userId)
+                .orElseThrow(() -> new ApiException("Task não encontrada"));
+
+        Integer taskOrder = taskMoved.getOrder();
+
+        TaskEntity taskAdjacent;
+        if (moveUp) {
+            taskAdjacent = this.taskRepository.findTaskEntityByOrderAndUserId(taskOrder + 1, userId)
+                    .orElseThrow(() -> new ApiException("Task não encontrada"));
+
+            taskAdjacent.setOrder(-taskAdjacent.getOrder());
+            this.taskRepository.save(taskAdjacent);
+
+            taskMoved.setOrder(taskMoved.getOrder() + 1);
+            this.taskRepository.save(taskMoved);
+        }
+        else {
+            taskAdjacent = this.taskRepository.findTaskEntityByOrderAndUserId(taskOrder - 1, userId)
+                    .orElseThrow(() -> new ApiException("Task não encontrada"));
+
+            taskAdjacent.setOrder(-taskAdjacent.getOrder());
+            this.taskRepository.save(taskAdjacent);
+
+            taskMoved.setOrder(taskMoved.getOrder() - 1);
+            this.taskRepository.save(taskMoved);
+        }
+
+        taskAdjacent.setOrder(taskOrder);
+        this.taskRepository.save(taskAdjacent);
     }
 }

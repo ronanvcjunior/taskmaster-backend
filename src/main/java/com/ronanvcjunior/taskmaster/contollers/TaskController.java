@@ -52,4 +52,12 @@ public class TaskController {
 
         return ResponseEntity.ok().body(getResponse(request, of("tasks", tasks), "Atividade do usuário recuperado", OK));
     }
+
+    @PutMapping("/move")
+    @PreAuthorize("hasAnyAuthority('task:update') or hasAnyRole('USER', 'ADMIN')")
+    public ResponseEntity<Response> moveTaskOrder(@RequestParam("task") @Valid String taskId, @RequestParam("moveUp") @Valid Boolean moveUp, HttpServletRequest request) {
+        this.taskService.moveTaskOrder(taskId, moveUp);
+
+        return ResponseEntity.ok().body(getResponse(request, emptyMap(), "Atividade movida", OK));
+    }
 }
