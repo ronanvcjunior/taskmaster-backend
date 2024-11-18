@@ -7,4 +7,6 @@ public class QueryConstants {
             "JOIN roles r ON ur.role_id = r.id " +
             "WHERE u.email <> 'system@gmail.com'";
 
+    // Task
+    public final static String CREATE_TASK = "SELECT MAX(task_order) FROM tasks WHERE user_id = :userId";
 }
