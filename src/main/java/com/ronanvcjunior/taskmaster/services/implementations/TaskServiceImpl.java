@@ -104,4 +104,26 @@ public class TaskServiceImpl implements TaskService {
         taskAdjacent.setOrder(taskOrder);
         this.taskRepository.save(taskAdjacent);
     }
+
+    @Override
+    public void setTaskOrder(String taskId, Integer order) {
+        Long userId = RequestContext.getUserId();
+
+        TaskEntity taskMoved = this.taskRepository.findTaskEntityByTaskIdAndUserId(taskId, userId)
+                .orElseThrow(() -> new ApiException("Task não encontrada"));
+
+        Integer taskOrder = taskMoved.getOrder();
+
+        TaskEntity taskAdjacent = this.taskRepository.findTaskEntityByOrderAndUserId(order, userId)
+                .orElseThrow(() -> new ApiException("Task não encontrada"));
+
+        taskAdjacent.setOrder(-taskAdjacent.getOrder());
+        this.taskRepository.save(taskAdjacent);
+
+        taskMoved.setOrder(order);
+        this.taskRepository.save(taskMoved);
+
+        taskAdjacent.setOrder(taskOrder);
+        this.taskRepository.save(taskAdjacent);
+    }
 }

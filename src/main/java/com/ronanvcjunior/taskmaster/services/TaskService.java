@@ -16,4 +16,6 @@ public interface TaskService {
     List<TaskResponse> getAllTasks();
 
     void moveTaskOrder(@Valid String taskId, @Valid Boolean moveUp);
+
+    void setTaskOrder(@Valid String taskId, @Valid Integer order);
 }

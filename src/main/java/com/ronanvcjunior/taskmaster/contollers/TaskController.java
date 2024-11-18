@@ -60,4 +60,12 @@ public class TaskController {
 
         return ResponseEntity.ok().body(getResponse(request, emptyMap(), "Atividade movida", OK));
     }
+
+    @PutMapping("/setmove")
+    @PreAuthorize("hasAnyAuthority('task:update') or hasAnyRole('USER', 'ADMIN')")
+    public ResponseEntity<Response> setTaskOrder(@RequestParam("task") @Valid String taskId, @RequestParam("order") @Valid Integer order, HttpServletRequest request) {
+        this.taskService.setTaskOrder(taskId, order);
+
+        return ResponseEntity.ok().body(getResponse(request, emptyMap(), "Atividade movida", OK));
+    }
 }
