@@ -9,4 +9,5 @@ public class QueryConstants {
 
     // Task
     public final static String CREATE_TASK = "SELECT MAX(task_order) FROM tasks WHERE user_id = :userId";
+    public final static String SELECT_TASK = "SELECT * FROM tasks WHERE user_id = :userId and task_id = :taskId";
 }

@@ -1,5 +1,6 @@
 package com.ronanvcjunior.taskmaster.utils;
 
+import com.ronanvcjunior.taskmaster.dtos.response.TaskResponse;
 import com.ronanvcjunior.taskmaster.entities.TaskEntity;
 import com.ronanvcjunior.taskmaster.entities.UserEntity;
 
@@ -20,5 +21,15 @@ public class TaskUtils {
                 .owner(user)
                 .build();
 
+    }
+
+    public static TaskResponse fromTaskEntity(TaskEntity taskEntity) {
+        return TaskResponse.builder()
+                .taskId(taskEntity.getTaskId())
+                .name(taskEntity.getName())
+                .cost(taskEntity.getCost())
+                .paymentDeadline(taskEntity.getPaymentDeadline())
+                .order(taskEntity.getOrder())
+                .build();
     }
 }
