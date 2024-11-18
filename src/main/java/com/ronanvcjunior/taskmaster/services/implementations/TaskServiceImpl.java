@@ -140,4 +140,25 @@ public class TaskServiceImpl implements TaskService {
 
         this.taskRepository.save(task);
     }
+
+    @Override
+    public void deleteTask(String taskId) {
+        Long userId = RequestContext.getUserId();
+
+        TaskEntity task = this.taskRepository.findTaskEntityByTaskIdAndUserId(taskId, userId)
+                .orElseThrow(() -> new ApiException("Task não encontrada"));
+
+        Integer orderTaskDelete = task.getOrder();
+
+        this.taskRepository.delete(task);
+
+        List<TaskEntity> tasks = this.taskRepository.findTaskEntitiesByOrderGreaterThanAndUserId(orderTaskDelete, userId)
+                .orElse(List.of());
+
+        for (TaskEntity taskEntity : tasks) {
+            taskEntity.setOrder(taskEntity.getOrder() - 1);
+        }
+
+        this.taskRepository.saveAll(tasks);
+    }
 }

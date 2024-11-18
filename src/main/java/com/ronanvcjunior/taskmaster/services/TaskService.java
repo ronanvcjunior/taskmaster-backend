@@ -20,4 +20,6 @@ public interface TaskService {
     void setTaskOrder(@Valid String taskId, @Valid Integer order);
 
     void updateTask(String taskId, String name, BigDecimal cost, ZonedDateTime paymentDeadline);
+
+    void deleteTask(@Valid String taskId);
 }

@@ -76,4 +76,12 @@ public class TaskController {
 
         return ResponseEntity.ok().body(getResponse(request, emptyMap(), "Atividade movida", OK));
     }
+
+    @DeleteMapping("/delete")
+    @PreAuthorize("hasAnyAuthority('task:delete') or hasAnyRole('USER', 'ADMIN')")
+    public ResponseEntity<Response> deleteTask(@RequestParam("task") @Valid String taskId, HttpServletRequest request) {
+        this.taskService.deleteTask(taskId);
+
+        return ResponseEntity.ok().body(getResponse(request, emptyMap(), "Atividade do usuário deletada", OK));
+    }
 }
