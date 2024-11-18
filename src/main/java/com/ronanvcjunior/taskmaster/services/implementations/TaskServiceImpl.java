@@ -126,4 +126,18 @@ public class TaskServiceImpl implements TaskService {
         taskAdjacent.setOrder(taskOrder);
         this.taskRepository.save(taskAdjacent);
     }
+
+    @Override
+    public void updateTask(String taskId, String name, BigDecimal cost, ZonedDateTime paymentDeadline) {
+        Long userId = RequestContext.getUserId();
+
+        TaskEntity task = this.taskRepository.findTaskEntityByTaskIdAndUserId(taskId, userId)
+                .orElseThrow(() -> new ApiException("Task não encontrada"));
+
+        task.setName(name);
+        task.setCost(cost);
+        task.setPaymentDeadline(paymentDeadline);
+
+        this.taskRepository.save(task);
+    }
 }

@@ -53,6 +53,14 @@ public class TaskController {
         return ResponseEntity.ok().body(getResponse(request, of("tasks", tasks), "Atividade do usuário recuperado", OK));
     }
 
+    @PutMapping("/update")
+    @PreAuthorize("hasAnyAuthority('task:update') or hasAnyRole('USER', 'ADMIN')")
+    public ResponseEntity<Response> updateTask(@RequestBody @Valid TaskRequest task, HttpServletRequest request) {
+        this.taskService.updateTask(task.taskId(), task.name(), task.cost(), task.paymentDeadline());
+
+        return ResponseEntity.ok().body(getResponse(request, emptyMap(), "Atividade alterada", OK));
+    }
+
     @PutMapping("/move")
     @PreAuthorize("hasAnyAuthority('task:update') or hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<Response> moveTaskOrder(@RequestParam("task") @Valid String taskId, @RequestParam("moveUp") @Valid Boolean moveUp, HttpServletRequest request) {

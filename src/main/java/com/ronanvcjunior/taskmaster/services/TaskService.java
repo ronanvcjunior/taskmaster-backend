@@ -18,4 +18,6 @@ public interface TaskService {
     void moveTaskOrder(@Valid String taskId, @Valid Boolean moveUp);
 
     void setTaskOrder(@Valid String taskId, @Valid Integer order);
+
+    void updateTask(String taskId, String name, BigDecimal cost, ZonedDateTime paymentDeadline);
 }
